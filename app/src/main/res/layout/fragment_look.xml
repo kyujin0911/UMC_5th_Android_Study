@@ -173,6 +173,7 @@
                 app:layout_constraintStart_toStartOf="@id/look_flo_chart_title_tv"
                 app:layout_constraintEnd_toEndOf="@id/look_flo_chart_play_all_tv"
                 app:layout_constraintBottom_toBottomOf="parent"/>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
