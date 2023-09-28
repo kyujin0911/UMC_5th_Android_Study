@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="fragment_title_tv" parent="Widget.AppCompat.TextView">
+        <item name="android:layout_marginStart">20dp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="fragment_look_chip" parent="ShapeAppearanceOverlay.Material3.Chip">
+        <item name="android:textColor">@drawable/fragment_look_chip_textcolor_selector</item>
+        <item name="android:checkable">true</item>
+        <item name="chipBackgroundColor">@drawable/fragment_look_chip_bg_selector</item>
+    </style>
+</resources>
