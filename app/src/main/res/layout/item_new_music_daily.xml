@@ -24,6 +24,7 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@drawable/img_album_exp3" />
         <ImageView
+            android:id="@+id/item_new_music_daily_play_btn"
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:src="@drawable/nugu_btn_play_32"

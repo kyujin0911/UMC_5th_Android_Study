@@ -12,4 +12,8 @@
         <item name="android:checkable">true</item>
         <item name="chipBackgroundColor">@drawable/fragment_look_chip_bg_selector</item>
     </style>
+
+    <style name="round_textview" parent="Widget.AppCompat.TextView">
+        <item name="background">@drawable/textview_background_radius</item>
+    </style>
 </resources>

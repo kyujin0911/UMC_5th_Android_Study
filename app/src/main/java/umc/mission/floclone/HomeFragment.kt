@@ -1,20 +1,26 @@
 package umc.mission.floclone
 
+import android.content.Intent
 import android.os.Bundle
+import android.text.TextUtils.replace
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import umc.mission.floclone.adapter.NewMusicDailyAdapter.Companion.NEW_MUSIC_DAILY
 import umc.mission.floclone.adapter.NewMusicDailyAdapter.Companion.VIDEO_COLLECTION
 import umc.mission.floclone.adapter.HomeViewPagerAdapter
+import umc.mission.floclone.adapter.HomeViewPagerAdapter.Companion.ADD
 import umc.mission.floclone.adapter.NewMusicDailyAdapter
+import umc.mission.floclone.adapter.NewMusicDailyAdapter.Companion.PLAY_BTN
 import umc.mission.floclone.databinding.FragmentHomeBinding
 
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(), NewMusicDailyAdapter.ItemClickListener {
     private lateinit var newMusicDailyAdapter: NewMusicDailyAdapter
     private lateinit var homeViewPagerAdapter: HomeViewPagerAdapter
     private lateinit var newMusicDailyList: MutableList<NewMusicDaily>
@@ -85,15 +91,15 @@ class HomeFragment : Fragment() {
             R.id.home_video_collection_recyclerview -> videoCollectionList
             else -> emptyList()
         }.toMutableList()
-        newMusicDailyAdapter = NewMusicDailyAdapter(recyclerViewItemList, viewHolderType)
+        newMusicDailyAdapter = NewMusicDailyAdapter(recyclerViewItemList, viewHolderType, this)
         recyclerView.adapter = newMusicDailyAdapter
     }
 
     private fun initViewPager(){
-        homeViewPagerAdapter = HomeViewPagerAdapter(homeViewPager1List)
+        homeViewPagerAdapter = HomeViewPagerAdapter(homeViewPager1List, ADD)
         binding?.homeAdViewpager1?.adapter = homeViewPagerAdapter
 
-        homeViewPagerAdapter = HomeViewPagerAdapter(homeViewPager2List)
+        homeViewPagerAdapter = HomeViewPagerAdapter(homeViewPager2List, ADD)
         binding?.homeAdViewpager2?.adapter = homeViewPagerAdapter
     }
 
@@ -119,4 +125,29 @@ class HomeFragment : Fragment() {
         super.onDestroyView()
         binding = null
     }
+
+    override fun onClick(newMusicDaily: NewMusicDaily, viewType: Int) {
+        val bundle = Bundle()
+        bundle.putString("music_title", newMusicDaily.title)
+        bundle.putString("music_singer", newMusicDaily.singer)
+        bundle.putInt("musicImageResId", newMusicDaily.musicImageResId)
+        parentFragmentManager.setFragmentResult("music", bundle)
+        when(viewType) {
+            PLAY_BTN -> {
+                parentFragmentManager.setFragmentResult("music", bundle)
+            }
+            else -> {
+                var tempFragment = AlbumFragment()
+                var bundle = Bundle()
+                bundle.putString("music_title", newMusicDaily.title)
+                bundle.putString("music_singer", newMusicDaily.singer)
+                tempFragment.arguments = bundle
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.activity_main_fragment_container, tempFragment)
+                    .commitAllowingStateLoss()
+            }
+        }
+
+    }
+
 }

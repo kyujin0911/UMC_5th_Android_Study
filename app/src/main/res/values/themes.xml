@@ -2,7 +2,7 @@
     <!-- Base application theme. -->
     <style name="Theme.FloClone" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">#070B4D</item>
+        <item name="colorPrimary">#F9F9F9</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
