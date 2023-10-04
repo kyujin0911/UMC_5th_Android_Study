@@ -3,6 +3,7 @@ package umc.mission.floclone
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isVisible
 import umc.mission.floclone.databinding.ActivityMainBinding
@@ -18,6 +19,7 @@ class MainActivity : AppCompatActivity() {
         if(musicTitle!=null && musicSinger != null && result.resultCode == RESULT_OK){
             binding.tvMainPlayingMusicTitle.text = musicTitle
             binding.tvMainPlayingMusicSinger.text = musicSinger
+            Toast.makeText(this, "앨범 제목: $musicTitle", Toast.LENGTH_SHORT).show()
         }
     }
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,7 +32,6 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, SongActivity::class.java)
             intent.putExtra("music_title", "${binding.tvMainPlayingMusicTitle.text}")
             intent.putExtra("music_singer", "${binding.tvMainPlayingMusicSinger.text}")
-            intent.putExtra("lyrics", "I'm on the Next Level Yeah\n절대적 룰을 지켜")
             intent.putExtra("musicImageResId", selectedMusicImgResId)
             playerMusic.launch(intent)
         }

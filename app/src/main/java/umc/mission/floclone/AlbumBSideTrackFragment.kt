@@ -23,7 +23,7 @@ class AlbumBSideTrackFragment: Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val list = mutableListOf<NewMusicDaily>(NewMusicDaily("Next Level", "aespa", R.drawable.img_album_exp3),
+        val list = mutableListOf(NewMusicDaily("Next Level", "aespa", R.drawable.img_album_exp3),
             NewMusicDaily("Next Level", "aespa", R.drawable.img_album_exp3),
             NewMusicDaily("Next Level", "aespa", R.drawable.img_album_exp3),
             NewMusicDaily("Next Level", "aespa", R.drawable.img_album_exp3),

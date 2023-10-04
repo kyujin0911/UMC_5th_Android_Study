@@ -19,20 +19,12 @@ class HomeViewPagerAdapter(private val list: MutableList<Int>, private val viewH
         }
     }
 
-    /*class AlbumViewPagerViewHolder(private val binding: ItemBSideTrackBinding): RecyclerView.ViewHolder(binding.root){
-    }
-*/
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater =
             parent.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
             val binding = ItemHomeViewPagerBinding.inflate(inflater, parent, false)
             return HomeViewPagerViewHolder(binding)
-
-        /*else{
-            val binding = ItemHomeVideoCollectionBinding.inflate(inflater, parent, false)
-            return AlbumViewPagerViewHolder(binding)
-        }*/
     }
 
     override fun getItemCount(): Int {
