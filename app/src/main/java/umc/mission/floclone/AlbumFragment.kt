@@ -23,8 +23,22 @@ class AlbumFragment: Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        initView()
+        initViewPager2()
+
+        binding.albumPreviousBtn.setOnClickListener {
+            parentFragmentManager.popBackStack()
+        }
+    }
+
+    private fun initView(){
         binding.albumAlbumTitleTv.text = arguments?.getString("music_title")
         binding.albumAlbumSingerTv.text = arguments?.getString("music_singer")
+        binding.albumAlbumDateTv.text = arguments?.getString("albumInfo")
+        binding.albumAlbumImgIv.setImageResource(arguments?.getInt("musicImageResId") ?: 0)
+    }
+
+    private fun initViewPager2(){
         val fragmentStateAdapter = ViewpagerFragmentAdapter(requireActivity())
         binding.albumViewpager2.adapter = fragmentStateAdapter
         TabLayoutMediator(binding.albumTablayout, binding.albumViewpager2) { tab, position ->
