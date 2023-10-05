@@ -1,6 +1,7 @@
 package umc.mission.floclone
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +14,8 @@ import umc.mission.floclone.databinding.FragmentAlbumBSideTrackBinding
 
 class AlbumBSideTrackFragment: Fragment() {
     private lateinit var binding: FragmentAlbumBSideTrackBinding
+    private var musicTitle: String? = null
+    private var musicSinger: String? = null
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -23,17 +26,39 @@ class AlbumBSideTrackFragment: Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val list = mutableListOf(NewMusicDaily("Next Level", "aespa", R.drawable.img_album_exp3),
-            NewMusicDaily("Next Level", "aespa", R.drawable.img_album_exp3),
-            NewMusicDaily("Next Level", "aespa", R.drawable.img_album_exp3),
-            NewMusicDaily("Next Level", "aespa", R.drawable.img_album_exp3),
-            NewMusicDaily("Next Level", "aespa", R.drawable.img_album_exp3),
-            NewMusicDaily("Next Level", "aespa", R.drawable.img_album_exp3),
-            NewMusicDaily("Next Level", "aespa", R.drawable.img_album_exp3))
+        //initRecyclerView()
+        parentFragmentManager.setFragmentResultListener("music", this){ _, bundle ->
+            musicTitle = bundle.getString("music_title").toString()
+            musicSinger = bundle.getString("music_singer").toString()
+        }
+        Log.d("Bside", musicTitle.toString())
+        val list = mutableListOf(Music(musicTitle, musicSinger),
+            Music(musicTitle, musicSinger),
+            Music(musicTitle, musicSinger),
+            Music(musicTitle, musicSinger),
+            Music(musicTitle, musicSinger),
+            Music(musicTitle, musicSinger))
         val layoutManager = LinearLayoutManager(context)
         layoutManager.orientation = LinearLayoutManager.VERTICAL
-        val recyclerView = view.findViewById<RecyclerView>(R.id.album_b_side_track_recyclerview)
-        recyclerView.layoutManager = layoutManager
+        val recyclerView = view?.findViewById<RecyclerView>(R.id.album_b_side_track_recyclerview)
+        recyclerView?.layoutManager = layoutManager
         binding.albumBSideTrackRecyclerview.adapter = NewMusicDailyAdapter(list, B_SIDE_TRACK)
     }
+
+    /*private fun initRecyclerView(){
+        val musicTitle = arguments?.getString("music_title")
+        val musicSinger = arguments?.getString("music_singer")
+
+        val list = mutableListOf(Music(musicTitle, musicSinger),
+            Music(musicTitle, musicSinger),
+            Music(musicTitle, musicSinger),
+            Music(musicTitle, musicSinger),
+            Music(musicTitle, musicSinger),
+            Music(musicTitle, musicSinger))
+        val layoutManager = LinearLayoutManager(context)
+        layoutManager.orientation = LinearLayoutManager.VERTICAL
+        val recyclerView = view?.findViewById<RecyclerView>(R.id.album_b_side_track_recyclerview)
+        recyclerView?.layoutManager = layoutManager
+        binding.albumBSideTrackRecyclerview.adapter = NewMusicDailyAdapter(list, B_SIDE_TRACK)
+    }*/
 }

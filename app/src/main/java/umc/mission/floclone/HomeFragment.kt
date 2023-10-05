@@ -1,14 +1,10 @@
 package umc.mission.floclone
 
-import android.content.Intent
 import android.os.Bundle
-import android.text.TextUtils.replace
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -23,9 +19,9 @@ import umc.mission.floclone.databinding.FragmentHomeBinding
 class HomeFragment : Fragment(), NewMusicDailyAdapter.ItemClickListener {
     private lateinit var newMusicDailyAdapter: NewMusicDailyAdapter
     private lateinit var homeViewPagerAdapter: HomeViewPagerAdapter
-    private lateinit var newMusicDailyList: MutableList<NewMusicDaily>
-    private lateinit var podcastList: MutableList<NewMusicDaily>
-    private lateinit var videoCollectionList: MutableList<NewMusicDaily>
+    private lateinit var musicList: MutableList<Music>
+    private lateinit var podcastList: MutableList<Music>
+    private lateinit var videoCollectionList: MutableList<Music>
     private lateinit var homeViewPager1List: MutableList<Int>
     private lateinit var homeViewPager2List: MutableList<Int>
     private var binding: FragmentHomeBinding? = null
@@ -50,27 +46,27 @@ class HomeFragment : Fragment(), NewMusicDailyAdapter.ItemClickListener {
     }
 
     private fun makeDummyData(){
-        newMusicDailyList = mutableListOf(
-            NewMusicDaily("Next Level", "aespa", R.drawable.img_album_exp3, "I'm on the Next Level Yeah\n" +
+        musicList = mutableListOf(
+            Music("Next Level", "aespa", R.drawable.img_album_exp3, "I'm on the Next Level Yeah\n" +
                     "절대적 룰을 지켜", "2021.05.17 싱글 댄스팝"),
-            NewMusicDaily("작은 것들을 위한 시", "방탄소년단", R.drawable.img_album_exp4, "모든 게 궁금해\n" +
+            Music("작은 것들을 위한 시", "방탄소년단", R.drawable.img_album_exp4, "모든 게 궁금해\n" +
                     "How's your day", "2019.04.12 미니 알앤비, 힙합"),
-            NewMusicDaily("BAAM", "모모랜드 (MOMOLAND)", R.drawable.img_album_exp5, "Bae Bae Bae BAAM BAAM\n" +
+            Music("BAAM", "모모랜드 (MOMOLAND)", R.drawable.img_album_exp5, "Bae Bae Bae BAAM BAAM\n" +
                     "Bae Bae Bae BAAM BAAM", "2018.06.26"),
-            NewMusicDaily("Weekend", "태연", R.drawable.img_album_exp6, "가장 가까운 바다\n" +
+            Music("Weekend", "태연", R.drawable.img_album_exp6, "가장 가까운 바다\n" +
                     "혼자만의 영화관", "2021.07.06 싱글 댄스팝")
         )
         podcastList = mutableListOf(
-            NewMusicDaily("제목", "가수", R.drawable.img_potcast_exp),
-            NewMusicDaily("제목", "가수", R.drawable.img_potcast_exp),
-            NewMusicDaily("제목", "가수", R.drawable.img_potcast_exp),
-            NewMusicDaily("제목", "가수", R.drawable.img_potcast_exp)
+            Music("제목", "가수", R.drawable.img_potcast_exp),
+            Music("제목", "가수", R.drawable.img_potcast_exp),
+            Music("제목", "가수", R.drawable.img_potcast_exp),
+            Music("제목", "가수", R.drawable.img_potcast_exp)
         )
         videoCollectionList = mutableListOf(
-            NewMusicDaily("제목", "가수", R.drawable.img_video_exp),
-            NewMusicDaily("제목", "가수", R.drawable.img_video_exp),
-            NewMusicDaily("제목", "가수", R.drawable.img_video_exp),
-            NewMusicDaily("제목", "가수", R.drawable.img_video_exp)
+            Music("제목", "가수", R.drawable.img_video_exp),
+            Music("제목", "가수", R.drawable.img_video_exp),
+            Music("제목", "가수", R.drawable.img_video_exp),
+            Music("제목", "가수", R.drawable.img_video_exp)
         )
         homeViewPager1List = mutableListOf(
             R.drawable.img_home_viewpager_exp,
@@ -90,7 +86,7 @@ class HomeFragment : Fragment(), NewMusicDailyAdapter.ItemClickListener {
         val recyclerView = view.findViewById<RecyclerView>(recyclerViewId)
         recyclerView.layoutManager = layoutManager
         val recyclerViewItemList = when(recyclerViewId){
-            R.id.home_new_music_daily_recyclerview -> newMusicDailyList
+            R.id.home_new_music_daily_recyclerview -> musicList
             R.id.home_podcast_recyclerview -> podcastList
             R.id.home_video_collection_recyclerview -> videoCollectionList
             else -> emptyList()
@@ -130,26 +126,25 @@ class HomeFragment : Fragment(), NewMusicDailyAdapter.ItemClickListener {
         binding = null
     }
 
-    override fun onClick(newMusicDaily: NewMusicDaily, viewType: Int) {
+    override fun onClick(music: Music, viewType: Int) {
         val bundle = Bundle()
-        bundle.apply {
-            putString("music_title", newMusicDaily.title)
-            putString("music_singer", newMusicDaily.singer)
-            putInt("musicImageResId", newMusicDaily.musicImageResId)
-        }
-        parentFragmentManager.setFragmentResult("music", bundle)
         when(viewType) {
             PLAY_BTN -> {
+                bundle.apply {
+                    putString("music_title", music.title)
+                    putString("music_singer", music.singer)
+                    putInt("musicImageResId", music.musicImageResId ?: 0)
+                    putString("lyrics", music.lyrics)
+                }
                 parentFragmentManager.setFragmentResult("music", bundle)
             }
             else -> {
                 var tempFragment = AlbumFragment()
-                var bundle = Bundle()
-                bundle.putString("music_title", newMusicDaily.title)
-                bundle.putString("music_singer", newMusicDaily.singer)
-                bundle.putInt("musicImageResId", newMusicDaily.musicImageResId)
-                bundle.putString("lyrics", newMusicDaily.lyrics)
-                bundle.putString("albumInfo", newMusicDaily.albumInfo)
+                bundle.putString("music_title", music.title)
+                bundle.putString("music_singer", music.singer)
+                bundle.putInt("musicImageResId", music.musicImageResId ?: 0)
+                bundle.putString("lyrics", music.lyrics)
+                bundle.putString("albumInfo", music.albumInfo)
                 tempFragment.arguments = bundle
                 parentFragmentManager.beginTransaction()
                     .replace(R.id.activity_main_fragment_container, tempFragment)
