@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.setFragmentResult
+import androidx.lifecycle.ViewModel
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -29,7 +31,6 @@ class AlbumFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         initView()
         initViewPager2()
-        sendData()
         binding.albumPreviousBtn.setOnClickListener {
             parentFragmentManager.popBackStack()
         }
@@ -45,7 +46,10 @@ class AlbumFragment: Fragment() {
     }
 
     private fun initViewPager2(){
-        val fragmentStateAdapter = ViewpagerFragmentAdapter(requireActivity())
+        var bundle = Bundle()
+        bundle.putString("music_title", musicTitle)
+        bundle.putString("music_singer", musicSinger)
+        val fragmentStateAdapter = ViewpagerFragmentAdapter(requireActivity(), bundle)
         binding.albumViewpager2.adapter = fragmentStateAdapter
         TabLayoutMediator(binding.albumTablayout, binding.albumViewpager2) { tab, position ->
             binding.albumViewpager2.currentItem = tab.position
@@ -55,15 +59,5 @@ class AlbumFragment: Fragment() {
                 else -> "영상"
             }
         }.attach()
-    }
-
-    private fun sendData(){
-        var tempFragment = AlbumBSideTrackFragment()
-        var bundle = Bundle()
-        bundle.putString("music_title", musicTitle)
-        bundle.putString("music_singer", musicSinger)
-        Log.d("AlbumMusic", musicTitle)
-        tempFragment.arguments = bundle
-        childFragmentManager.setFragmentResult("music", bundle)
     }
 }

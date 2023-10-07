@@ -48,8 +48,8 @@ class SongActivity : AppCompatActivity() {
     private fun updateView() {
         binding.activitySongPlayerRepeatBtn.setOnClickListener {
             repeatBtnState = !repeatBtnState
-                binding.activitySongPlayerRepeatBtn.setImageResource(
-                    if(repeatBtnState)R.drawable.selected_repeat else R.drawable.nugu_btn_repeat_inactive)
+            binding.activitySongPlayerRepeatBtn.setImageResource(
+                if(repeatBtnState)R.drawable.selected_repeat else R.drawable.nugu_btn_repeat_inactive)
         }
         binding.activitySongPlayerRandomBtn.setOnClickListener {
             randomBtnState = !randomBtnState
