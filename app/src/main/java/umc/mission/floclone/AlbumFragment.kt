@@ -1,18 +1,13 @@
 package umc.mission.floclone
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.setFragmentResult
-import androidx.lifecycle.ViewModel
-import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import umc.mission.floclone.adapter.ViewpagerFragmentAdapter
+import umc.mission.floclone.adapter.ViewpagerFragmentAdapter.Companion.ALBUM
 import umc.mission.floclone.databinding.FragmentAlbumBinding
 
 class AlbumFragment: Fragment() {
@@ -49,7 +44,7 @@ class AlbumFragment: Fragment() {
         var bundle = Bundle()
         bundle.putString("music_title", musicTitle)
         bundle.putString("music_singer", musicSinger)
-        val fragmentStateAdapter = ViewpagerFragmentAdapter(requireActivity(), bundle)
+        val fragmentStateAdapter = ViewpagerFragmentAdapter(requireActivity(), ALBUM, bundle)
         binding.albumViewpager2.adapter = fragmentStateAdapter
         TabLayoutMediator(binding.albumTablayout, binding.albumViewpager2) { tab, position ->
             binding.albumViewpager2.currentItem = tab.position

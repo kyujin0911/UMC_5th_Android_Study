@@ -16,4 +16,9 @@
     <style name="round_textview" parent="Widget.AppCompat.TextView">
         <item name="background">@drawable/textview_background_radius</item>
     </style>
+
+    <style name="locker_tab_text" parent="TextAppearance.Design.Tab">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">15sp</item>
+    </style>
 </resources>
