@@ -6,9 +6,12 @@ import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import umc.mission.floclone.*
 
-class ViewpagerFragmentAdapter(fragmentActivity: FragmentActivity, private val caller: Int, private val bundle: Bundle? = null): FragmentStateAdapter(fragmentActivity) {
-    private val fragmentList = if(caller==ALBUM)listOf(AlbumBSideTrackFragment(), DetailFragment(), VideoFragment())
-    else listOf(DownloadedMusicFragment(), MusicFileFragment())
+class ViewpagerFragmentAdapter(fragment: Fragment, private val caller: Int, private val bundle: Bundle? = null): FragmentStateAdapter(fragment) {
+    private var fragmentList:MutableList<Fragment> = when(caller){
+        ALBUM -> mutableListOf(AlbumBSideTrackFragment(), DetailFragment(), VideoFragment())
+        LOCKER -> mutableListOf(DownloadedMusicFragment(), MusicFileFragment())
+        else -> mutableListOf()
+    }
 
     override fun getItemCount(): Int {
         return fragmentList.size
@@ -21,8 +24,14 @@ class ViewpagerFragmentAdapter(fragmentActivity: FragmentActivity, private val c
         return fragmentList[position]
     }
 
+    fun addFragment(fragment: Fragment){
+        fragmentList.add(fragment)
+        notifyItemInserted(fragmentList.size-1)
+    }
+
     companion object{
         const val ALBUM = 0
         const val LOCKER = 1
+        const val HOME = 2
     }
 }

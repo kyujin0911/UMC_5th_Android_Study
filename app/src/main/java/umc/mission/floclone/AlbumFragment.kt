@@ -44,7 +44,7 @@ class AlbumFragment: Fragment() {
         var bundle = Bundle()
         bundle.putString("music_title", musicTitle)
         bundle.putString("music_singer", musicSinger)
-        val fragmentStateAdapter = ViewpagerFragmentAdapter(requireActivity(), ALBUM, bundle)
+        val fragmentStateAdapter = ViewpagerFragmentAdapter(this, ALBUM, bundle)
         binding.albumViewpager2.adapter = fragmentStateAdapter
         TabLayoutMediator(binding.albumTablayout, binding.albumViewpager2) { tab, position ->
             binding.albumViewpager2.currentItem = tab.position

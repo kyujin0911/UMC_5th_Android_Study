@@ -24,7 +24,7 @@ class LockerFragment : Fragment() {
         initViewPager2()
     }
     private fun initViewPager2(){
-        val fragmentStateAdapter = ViewpagerFragmentAdapter(requireActivity(), LOCKER)
+        val fragmentStateAdapter = ViewpagerFragmentAdapter(this, LOCKER)
         binding.fragmentLockerViewpager2.adapter = fragmentStateAdapter
         TabLayoutMediator(binding.fragmentLockerTablayout, binding.fragmentLockerViewpager2) { tab, position ->
             binding.fragmentLockerViewpager2.currentItem = tab.position
