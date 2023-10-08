@@ -11,6 +11,7 @@ import umc.mission.floclone.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private var selectedMusicImgResId: Int? = null
+    private var selectedMusicLyrics: String? = null
     private val playerMusic = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()){
         result ->
@@ -32,6 +33,7 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, SongActivity::class.java)
             intent.putExtra("music_title", "${binding.tvMainPlayingMusicTitle.text}")
             intent.putExtra("music_singer", "${binding.tvMainPlayingMusicSinger.text}")
+            intent.putExtra("lyrics", selectedMusicLyrics)
             intent.putExtra("musicImageResId", selectedMusicImgResId)
             playerMusic.launch(intent)
         }
@@ -90,6 +92,7 @@ class MainActivity : AppCompatActivity() {
             binding.tvMainPlayingMusicTitle.text = bundle.getString("music_title")
             binding.tvMainPlayingMusicSinger.text = bundle.getString("music_singer")
             selectedMusicImgResId = bundle.getInt("musicImageResId")
+            selectedMusicLyrics = bundle.getString("lyrics")
         }
     }
 }

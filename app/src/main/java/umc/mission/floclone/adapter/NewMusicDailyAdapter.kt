@@ -4,13 +4,13 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import umc.mission.floclone.NewMusicDaily
+import umc.mission.floclone.Music
 import umc.mission.floclone.databinding.ItemBSideTrackBinding
 import umc.mission.floclone.databinding.ItemHomeVideoCollectionBinding
 import umc.mission.floclone.databinding.ItemNewMusicDailyBinding
 
 class NewMusicDailyAdapter(
-    private val newMusicDailyList: MutableList<NewMusicDaily>,
+    private val musicList: MutableList<Music>,
     private val viewHolderType: Int,
     private val itemClickListener: ItemClickListener? = null
 ) :
@@ -19,32 +19,32 @@ class NewMusicDailyAdapter(
         RecyclerView.ViewHolder(binding.root) {
         val playBtn = binding.itemNewMusicDailyPlayBtn
         val musicImg = binding.ivRecyclerviewNewMusicDailyImg
-        fun bind(newMusicDaily: NewMusicDaily) {
+        fun bind(music: Music) {
             binding.apply {
-                tvRecyclerviewNewMusicDailyTitle.text = newMusicDaily.title
-                tvRecyclerviewNewMusicDailySinger.text = newMusicDaily.singer
-                ivRecyclerviewNewMusicDailyImg.setImageResource(newMusicDaily.musicImageResId)
+                tvRecyclerviewNewMusicDailyTitle.text = music.title
+                tvRecyclerviewNewMusicDailySinger.text = music.singer
+                ivRecyclerviewNewMusicDailyImg.setImageResource(music.musicImageResId ?: 0)
             }
         }
     }
 
     class VideoCollectionViewHolder(private val binding: ItemHomeVideoCollectionBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(newMusicDaily: NewMusicDaily) {
+        fun bind(music: Music) {
             binding.apply {
-                tvRecyclerviewVideoCollectionTitle.text = newMusicDaily.title
-                tvRecyclerviewVideoCollectionSinger.text = newMusicDaily.singer
-                ivRecyclerviewVideoCollectionImg.setImageResource(newMusicDaily.musicImageResId)
+                tvRecyclerviewVideoCollectionTitle.text = music.title
+                tvRecyclerviewVideoCollectionSinger.text = music.singer
+                ivRecyclerviewVideoCollectionImg.setImageResource(music.musicImageResId ?: 0)
             }
         }
     }
 
     class BSideTrackViewHolder(private val binding: ItemBSideTrackBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(newMusicDaily: NewMusicDaily) {
+        fun bind(music: Music) {
             binding.apply {
-                itemTrackMusicTitleTv.text = newMusicDaily.title
-                itemTrackSingerTv.text = newMusicDaily.singer
+                itemTrackMusicTitleTv.text = music.title
+                itemTrackSingerTv.text = music.singer
             }
         }
     }
@@ -73,7 +73,7 @@ class NewMusicDailyAdapter(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val newMusicDaily = newMusicDailyList[position]
+        val newMusicDaily = musicList[position]
         when (viewHolderType) {
             NEW_MUSIC_DAILY -> {
                 (holder as NewMusicDailyViewHolder).apply {
@@ -89,7 +89,7 @@ class NewMusicDailyAdapter(
     }
 
     override fun getItemCount(): Int {
-        return newMusicDailyList.size
+        return musicList.size
     }
 
     companion object {
@@ -101,6 +101,6 @@ class NewMusicDailyAdapter(
     }
 
     interface ItemClickListener {
-        fun onClick(newMusicDaily: NewMusicDaily, viewType: Int)
+        fun onClick(music: Music, viewType: Int)
     }
 }

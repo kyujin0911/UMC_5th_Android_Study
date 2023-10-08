@@ -157,7 +157,7 @@
         android:layout_height="wrap_content"
         android:textColor="@color/category_selected"
         android:textSize="15sp"
-        app:layout_constraintBottom_toTopOf="@id/activity_song_player_play_btn"
+        app:layout_constraintBottom_toTopOf="@id/playerLayout"
         app:layout_constraintStart_toStartOf="parent"
         android:text="00:00" />
 
@@ -166,7 +166,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="15sp"
-        app:layout_constraintBottom_toTopOf="@id/activity_song_player_play_btn"
+        app:layout_constraintBottom_toTopOf="@id/playerLayout"
         app:layout_constraintEnd_toEndOf="parent"
         android:text="01:00" />
 
@@ -175,58 +175,69 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:src="@drawable/nugu_btn_repeat_inactive"
-        app:layout_constraintBottom_toBottomOf="@id/activity_song_player_play_btn"
+        app:layout_constraintBottom_toTopOf="@id/activity_song_bottom_btn_layout"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/activity_song_player_play_btn" />
+        android:layout_marginBottom="20dp" />
 
-    <ImageView
-        android:id="@+id/activity_song_player_previous_btn"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:src="@drawable/btn_miniplayer_previous"
-        app:layout_constraintBottom_toBottomOf="@id/activity_song_player_play_btn"
-        app:layout_constraintEnd_toStartOf="@id/activity_song_player_play_btn"
-        app:layout_constraintTop_toTopOf="@id/activity_song_player_play_btn" />
-
-    <ImageView
-        android:id="@+id/activity_song_player_play_btn"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+    <LinearLayout
+        android:id="@+id/playerLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
-        android:src="@drawable/btn_player_play"
-        app:layout_constraintBottom_toTopOf="@id/activity_song_bottom_btn_layout"
-        app:layout_constraintEnd_toEndOf="@id/activity_song_player_random_btn"
-        app:layout_constraintStart_toStartOf="@id/activity_song_player_repeat_btn" />
+        app:layout_constraintStart_toEndOf="@id/activity_song_player_repeat_btn"
+        app:layout_constraintEnd_toStartOf="@id/activity_song_player_random_btn"
+        app:layout_constraintBottom_toTopOf="@id/activity_song_bottom_btn_layout">
+        <ImageView
+            android:id="@+id/activity_song_player_previous_btn"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/btn_miniplayer_previous"
+            app:layout_constraintBottom_toBottomOf="@id/activity_song_player_repeat_btn"
+            app:layout_constraintStart_toEndOf="@id/activity_song_player_repeat_btn"
+            app:layout_constraintTop_toTopOf="@id/activity_song_player_repeat_btn" />
 
-    <ImageView
-        android:id="@+id/activity_song_player_pause_btn"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginBottom="20dp"
-        android:src="@drawable/btn_miniplay_pause"
-        android:visibility="invisible"
-        app:layout_constraintTop_toBottomOf="@id/activity_song_music_playing_time_start_tv"
-        app:layout_constraintBottom_toTopOf="@id/activity_song_bottom_btn_layout"
-        app:layout_constraintEnd_toEndOf="@id/activity_song_player_random_btn"
-        app:layout_constraintStart_toStartOf="@id/activity_song_player_repeat_btn" />
+        <ImageView
+            android:id="@+id/activity_song_player_play_btn"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
 
-    <ImageView
-        android:id="@+id/activity_song_player_next_btn"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:src="@drawable/btn_miniplayer_next"
-        app:layout_constraintBottom_toBottomOf="@id/activity_song_player_play_btn"
-        app:layout_constraintStart_toEndOf="@id/activity_song_player_play_btn"
-        app:layout_constraintTop_toTopOf="@id/activity_song_player_play_btn" />
+            android:src="@drawable/btn_player_play"
+            app:layout_constraintBottom_toTopOf="@id/activity_song_bottom_btn_layout"
+            app:layout_constraintEnd_toEndOf="@id/activity_song_player_random_btn"
+            app:layout_constraintStart_toStartOf="@id/activity_song_player_repeat_btn" />
+
+        <ImageView
+            android:id="@+id/activity_song_player_pause_btn"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+
+            android:src="@drawable/btn_miniplay_pause"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@id/activity_song_bottom_btn_layout"
+            app:layout_constraintEnd_toEndOf="@id/activity_song_player_random_btn"
+            app:layout_constraintStart_toStartOf="@id/activity_song_player_repeat_btn" />
+
+        <ImageView
+            android:id="@+id/activity_song_player_next_btn"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/btn_miniplayer_next"
+            app:layout_constraintBottom_toBottomOf="@id/activity_song_player_repeat_btn"
+            app:layout_constraintStart_toEndOf="@id/activity_song_player_play_btn"
+            app:layout_constraintTop_toTopOf="@id/activity_song_player_repeat_btn" />
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/activity_song_player_random_btn"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:src="@drawable/nugu_btn_random_inactive"
-        app:layout_constraintBottom_toBottomOf="@id/activity_song_player_play_btn"
+        android:padding="0dp"
+        android:scaleType="centerCrop"
+        android:backgroundTint="@color/white"
+        app:layout_constraintBottom_toBottomOf="@id/activity_song_player_repeat_btn"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/activity_song_player_play_btn" />
+        app:layout_constraintTop_toTopOf="@id/activity_song_player_repeat_btn" />
 
     <LinearLayout
         android:id="@+id/activity_song_bottom_btn_layout"

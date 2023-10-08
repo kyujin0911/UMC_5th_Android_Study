@@ -13,6 +13,10 @@ import umc.mission.floclone.databinding.FragmentAlbumBSideTrackBinding
 
 class AlbumBSideTrackFragment: Fragment() {
     private lateinit var binding: FragmentAlbumBSideTrackBinding
+    private var musicTitle: String? = null
+    private var musicSinger: String? = null
+    private var toggle = false
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -23,17 +27,31 @@ class AlbumBSideTrackFragment: Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val list = mutableListOf(NewMusicDaily("Next Level", "aespa", R.drawable.img_album_exp3),
-            NewMusicDaily("Next Level", "aespa", R.drawable.img_album_exp3),
-            NewMusicDaily("Next Level", "aespa", R.drawable.img_album_exp3),
-            NewMusicDaily("Next Level", "aespa", R.drawable.img_album_exp3),
-            NewMusicDaily("Next Level", "aespa", R.drawable.img_album_exp3),
-            NewMusicDaily("Next Level", "aespa", R.drawable.img_album_exp3),
-            NewMusicDaily("Next Level", "aespa", R.drawable.img_album_exp3))
+        musicTitle = arguments?.getString("music_title")
+        musicSinger = arguments?.getString("music_singer")
+        initRecyclerView()
+        updateView()
+    }
+
+    private fun initRecyclerView(){
+        val list = mutableListOf(Music(musicTitle, musicSinger),
+            Music(musicTitle, musicSinger),
+            Music(musicTitle, musicSinger),
+            Music(musicTitle, musicSinger),
+            Music(musicTitle, musicSinger),
+            Music(musicTitle, musicSinger))
         val layoutManager = LinearLayoutManager(context)
         layoutManager.orientation = LinearLayoutManager.VERTICAL
-        val recyclerView = view.findViewById<RecyclerView>(R.id.album_b_side_track_recyclerview)
-        recyclerView.layoutManager = layoutManager
+        val recyclerView = view?.findViewById<RecyclerView>(R.id.album_b_side_track_recyclerview)
+        recyclerView?.layoutManager = layoutManager
         binding.albumBSideTrackRecyclerview.adapter = NewMusicDailyAdapter(list, B_SIDE_TRACK)
+    }
+
+    private fun updateView(){
+        binding.albumBSideTrackMixBtn.setOnClickListener {
+            toggle = !toggle
+            binding.albumBSideTrackMixBtn.setImageResource(
+                if (toggle) R.drawable.btn_toggle_on else R.drawable.btn_toggle_off)
+        }
     }
 }
