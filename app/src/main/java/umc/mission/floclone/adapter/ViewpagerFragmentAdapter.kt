@@ -2,9 +2,12 @@ package umc.mission.floclone.adapter
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import umc.mission.floclone.*
+import umc.mission.floclone.album.AlbumBSideTrackFragment
+import umc.mission.floclone.album.DetailFragment
+import umc.mission.floclone.locker.DownloadedMusicFragment
+import umc.mission.floclone.locker.MusicFileFragment
 
 class ViewpagerFragmentAdapter(fragment: Fragment, private val caller: Int, private val bundle: Bundle? = null): FragmentStateAdapter(fragment) {
     private var fragmentList:MutableList<Fragment> = when(caller){

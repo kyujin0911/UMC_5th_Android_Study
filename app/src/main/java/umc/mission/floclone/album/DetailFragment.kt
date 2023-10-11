@@ -1,4 +1,4 @@
-package umc.mission.floclone
+package umc.mission.floclone.album
 
 import android.os.Bundle
 import android.view.LayoutInflater

@@ -19,10 +19,11 @@ import umc.mission.floclone.adapter.NewMusicDailyAdapter
 import umc.mission.floclone.adapter.NewMusicDailyAdapter.Companion.PLAY_BTN
 import umc.mission.floclone.adapter.ViewpagerFragmentAdapter
 import umc.mission.floclone.adapter.ViewpagerFragmentAdapter.Companion.HOME
+import umc.mission.floclone.album.AlbumFragment
+import umc.mission.floclone.data.*
 import umc.mission.floclone.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment(), NewMusicDailyAdapter.ItemClickListener {
-    private lateinit var newMusicDailyAdapter: NewMusicDailyAdapter
     private lateinit var homeViewPagerAdapter: HomeViewPagerAdapter
     private lateinit var musicList: MutableList<Music>
     private lateinit var podcastList: MutableList<Music>
@@ -64,19 +65,19 @@ class HomeFragment : Fragment(), NewMusicDailyAdapter.ItemClickListener {
         musicList = mutableListOf(
             Music(
                 "Next Level", "aespa", R.drawable.img_album_exp3, "I'm on the Next Level Yeah\n" +
-                        "절대적 룰을 지켜", "2021.05.17 싱글 댄스팝"
+                        "절대적 룰을 지켜", "2021.05.17 싱글 댄스팝", 0, 222
             ),
             Music(
                 "작은 것들을 위한 시", "방탄소년단", R.drawable.img_album_exp4, "모든 게 궁금해\n" +
-                        "How's your day", "2019.04.12 미니 알앤비, 힙합"
+                        "How's your day", "2019.04.12 미니 알앤비, 힙합", 0, 229
             ),
             Music(
                 "BAAM", "모모랜드 (MOMOLAND)", R.drawable.img_album_exp5, "Bae Bae Bae BAAM BAAM\n" +
-                        "Bae Bae Bae BAAM BAAM", "2018.06.26"
+                        "Bae Bae Bae BAAM BAAM", "2018.06.26", 0, 208
             ),
             Music(
                 "Weekend", "태연", R.drawable.img_album_exp6, "가장 가까운 바다\n" +
-                        "혼자만의 영화관", "2021.07.06 싱글 댄스팝"
+                        "혼자만의 영화관", "2021.07.06 싱글 댄스팝", 0, 234
             )
         )
         podcastList = mutableListOf(
@@ -114,7 +115,7 @@ class HomeFragment : Fragment(), NewMusicDailyAdapter.ItemClickListener {
             R.id.home_video_collection_recyclerview -> videoCollectionList
             else -> emptyList()
         }.toMutableList()
-        newMusicDailyAdapter = NewMusicDailyAdapter(recyclerViewItemList, viewHolderType, this)
+        val newMusicDailyAdapter = NewMusicDailyAdapter(recyclerViewItemList, viewHolderType, this)
         recyclerView.adapter = newMusicDailyAdapter
     }
 
@@ -213,23 +214,25 @@ class HomeFragment : Fragment(), NewMusicDailyAdapter.ItemClickListener {
         when (viewType) {
             PLAY_BTN -> {
                 bundle.apply {
-                    putString("music_title", music.title)
-                    putString("music_singer", music.singer)
-                    putInt("musicImageResId", music.musicImageResId ?: 0)
-                    putString("lyrics", music.lyrics)
+                    putString(MUSIC_TITLE, music.title)
+                    putString(MUSIC_SINGER, music.singer)
+                    putInt(MUSIC_IMG_RES_ID, music.musicImageResId ?: 0)
+                    putString(LYRICS, music.lyrics)
+                    putInt(SECOND, music.second)
+                    putInt(PLAY_TIME, music.playTime)
                 }
-                parentFragmentManager.setFragmentResult("music", bundle)
+                parentFragmentManager.setFragmentResult(MUSIC, bundle)
             }
             else -> {
                 var tempFragment = AlbumFragment()
-                bundle.putString("music_title", music.title)
-                bundle.putString("music_singer", music.singer)
-                bundle.putInt("musicImageResId", music.musicImageResId ?: 0)
-                bundle.putString("albumInfo", music.albumInfo)
+                bundle.putString(MUSIC_TITLE, music.title)
+                bundle.putString(MUSIC_SINGER, music.singer)
+                bundle.putInt(MUSIC_IMG_RES_ID, music.musicImageResId ?: 0)
+                bundle.putString(ALBUM_INFO, music.albumInfo)
                 tempFragment.arguments = bundle
                 parentFragmentManager.beginTransaction()
                     .replace(R.id.activity_main_fragment_container, tempFragment)
-                    .addToBackStack("album_fragment")
+                    .addToBackStack(ALBUM_FRAGMENT)
                     .commitAllowingStateLoss()
             }
         }

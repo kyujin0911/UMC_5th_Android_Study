@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import umc.mission.floclone.databinding.FragmentHomeBannerBinding
 
-class HomeBannerFragment(val title: String): Fragment() {
+class HomeBannerFragment(private val title: String): Fragment() {
     private lateinit var binding: FragmentHomeBannerBinding
     override fun onCreateView(
         inflater: LayoutInflater,

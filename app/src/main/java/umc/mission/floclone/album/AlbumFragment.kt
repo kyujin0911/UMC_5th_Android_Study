@@ -1,4 +1,4 @@
-package umc.mission.floclone
+package umc.mission.floclone.album
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,6 +8,10 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayoutMediator
 import umc.mission.floclone.adapter.ViewpagerFragmentAdapter
 import umc.mission.floclone.adapter.ViewpagerFragmentAdapter.Companion.ALBUM
+import umc.mission.floclone.data.ALBUM_INFO
+import umc.mission.floclone.data.MUSIC_IMG_RES_ID
+import umc.mission.floclone.data.MUSIC_SINGER
+import umc.mission.floclone.data.MUSIC_TITLE
 import umc.mission.floclone.databinding.FragmentAlbumBinding
 
 class AlbumFragment: Fragment() {
@@ -32,18 +36,18 @@ class AlbumFragment: Fragment() {
     }
 
     private fun initView(){
-        musicTitle = arguments?.getString("music_title").toString()
-        musicSinger = arguments?.getString("music_singer").toString()
+        musicTitle = arguments?.getString(MUSIC_TITLE).toString()
+        musicSinger = arguments?.getString(MUSIC_SINGER).toString()
         binding.albumAlbumTitleTv.text = musicTitle
         binding.albumAlbumSingerTv.text = musicSinger
-        binding.albumAlbumDateTv.text = arguments?.getString("albumInfo")
-        binding.albumAlbumImgIv.setImageResource(arguments?.getInt("musicImageResId") ?: 0)
+        binding.albumAlbumDateTv.text = arguments?.getString(ALBUM_INFO)
+        binding.albumAlbumImgIv.setImageResource(arguments?.getInt(MUSIC_IMG_RES_ID) ?: 0)
     }
 
     private fun initViewPager2(){
         var bundle = Bundle()
-        bundle.putString("music_title", musicTitle)
-        bundle.putString("music_singer", musicSinger)
+        bundle.putString(MUSIC_TITLE, musicTitle)
+        bundle.putString(MUSIC_SINGER, musicSinger)
         val fragmentStateAdapter = ViewpagerFragmentAdapter(this, ALBUM, bundle)
         binding.albumViewpager2.adapter = fragmentStateAdapter
         TabLayoutMediator(binding.albumTablayout, binding.albumViewpager2) { tab, position ->

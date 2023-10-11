@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import umc.mission.floclone.adapter.HomeViewPagerAdapter
 import umc.mission.floclone.adapter.NewMusicDailyAdapter
+import umc.mission.floclone.data.Music
 import umc.mission.floclone.databinding.FragmentLookBinding
 
 class LookFragment : Fragment() {

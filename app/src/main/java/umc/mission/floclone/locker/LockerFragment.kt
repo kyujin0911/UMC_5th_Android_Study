@@ -1,4 +1,4 @@
-package umc.mission.floclone
+package umc.mission.floclone.locker
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

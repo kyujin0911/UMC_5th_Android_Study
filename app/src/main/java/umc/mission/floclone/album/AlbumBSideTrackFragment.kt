@@ -1,4 +1,4 @@
-package umc.mission.floclone
+package umc.mission.floclone.album
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,8 +7,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import umc.mission.floclone.data.Music
+import umc.mission.floclone.R
 import umc.mission.floclone.adapter.NewMusicDailyAdapter
 import umc.mission.floclone.adapter.NewMusicDailyAdapter.Companion.B_SIDE_TRACK
+import umc.mission.floclone.data.MUSIC_SINGER
+import umc.mission.floclone.data.MUSIC_TITLE
 import umc.mission.floclone.databinding.FragmentAlbumBSideTrackBinding
 
 class AlbumBSideTrackFragment: Fragment() {
@@ -27,19 +31,21 @@ class AlbumBSideTrackFragment: Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        musicTitle = arguments?.getString("music_title")
-        musicSinger = arguments?.getString("music_singer")
+        musicTitle = arguments?.getString(MUSIC_TITLE)
+        musicSinger = arguments?.getString(MUSIC_SINGER)
         initRecyclerView()
         updateView()
     }
 
     private fun initRecyclerView(){
-        val list = mutableListOf(Music(musicTitle, musicSinger),
+        val list = mutableListOf(
             Music(musicTitle, musicSinger),
             Music(musicTitle, musicSinger),
             Music(musicTitle, musicSinger),
             Music(musicTitle, musicSinger),
-            Music(musicTitle, musicSinger))
+            Music(musicTitle, musicSinger),
+            Music(musicTitle, musicSinger)
+        )
         val layoutManager = LinearLayoutManager(context)
         layoutManager.orientation = LinearLayoutManager.VERTICAL
         val recyclerView = view?.findViewById<RecyclerView>(R.id.album_b_side_track_recyclerview)
@@ -51,7 +57,8 @@ class AlbumBSideTrackFragment: Fragment() {
         binding.albumBSideTrackMixBtn.setOnClickListener {
             toggle = !toggle
             binding.albumBSideTrackMixBtn.setImageResource(
-                if (toggle) R.drawable.btn_toggle_on else R.drawable.btn_toggle_off)
+                if (toggle) R.drawable.btn_toggle_on else R.drawable.btn_toggle_off
+            )
         }
     }
 }

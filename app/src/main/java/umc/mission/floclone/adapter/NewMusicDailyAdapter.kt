@@ -4,7 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import umc.mission.floclone.Music
+import umc.mission.floclone.data.Music
 import umc.mission.floclone.databinding.ItemBSideTrackBinding
 import umc.mission.floclone.databinding.ItemHomeVideoCollectionBinding
 import umc.mission.floclone.databinding.ItemNewMusicDailyBinding
