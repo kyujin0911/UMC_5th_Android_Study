@@ -1,15 +1,19 @@
 package umc.mission.floclone
 
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
+import com.google.gson.Gson
 import kotlinx.coroutines.Runnable
 import umc.mission.floclone.adapter.NewMusicDailyAdapter.Companion.NEW_MUSIC_DAILY
 import umc.mission.floclone.adapter.NewMusicDailyAdapter.Companion.VIDEO_COLLECTION
@@ -31,6 +35,7 @@ class HomeFragment : Fragment(), NewMusicDailyAdapter.ItemClickListener {
     private lateinit var homeViewPager1List: MutableList<Int>
     private lateinit var homeViewPager2List: MutableList<Int>
     private lateinit var binding: FragmentHomeBinding
+    private var gson = Gson()
     private val sliderHandler: Handler = Handler()
     private val sliderRunnable = Runnable {
         if (binding.homeBannerViewpager2.currentItem == 3)
@@ -65,19 +70,19 @@ class HomeFragment : Fragment(), NewMusicDailyAdapter.ItemClickListener {
         musicList = mutableListOf(
             Music(
                 "Next Level", "aespa", R.drawable.img_album_exp3, "I'm on the Next Level Yeah\n" +
-                        "절대적 룰을 지켜", "2021.05.17 싱글 댄스팝", 0, 222
+                        "절대적 룰을 지켜", "2021.05.17 싱글 댄스팝", 0, 222, false, "music_nextlevel"
             ),
             Music(
                 "작은 것들을 위한 시", "방탄소년단", R.drawable.img_album_exp4, "모든 게 궁금해\n" +
-                        "How's your day", "2019.04.12 미니 알앤비, 힙합", 0, 229
+                        "How's your day", "2019.04.12 미니 알앤비, 힙합", 0, 229, false, "music_nextlevel"
             ),
             Music(
                 "BAAM", "모모랜드 (MOMOLAND)", R.drawable.img_album_exp5, "Bae Bae Bae BAAM BAAM\n" +
-                        "Bae Bae Bae BAAM BAAM", "2018.06.26", 0, 208
+                        "Bae Bae Bae BAAM BAAM", "2018.06.26", 0, 208, false, "music_nextlevel"
             ),
             Music(
                 "Weekend", "태연", R.drawable.img_album_exp6, "가장 가까운 바다\n" +
-                        "혼자만의 영화관", "2021.07.06 싱글 댄스팝", 0, 234
+                        "혼자만의 영화관", "2021.07.06 싱글 댄스팝", 0, 234, false, "music_nextlevel"
             )
         )
         podcastList = mutableListOf(
@@ -220,6 +225,7 @@ class HomeFragment : Fragment(), NewMusicDailyAdapter.ItemClickListener {
                     putString(LYRICS, music.lyrics)
                     putInt(SECOND, music.second)
                     putInt(PLAY_TIME, music.playTime)
+                    putString(MUSIC_FILE_NAME, music.musicFileName)
                 }
                 parentFragmentManager.setFragmentResult(MUSIC, bundle)
             }

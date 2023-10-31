@@ -89,7 +89,7 @@
             android:adjustViewBounds="true"
             android:background="@drawable/fragment_home_album_background"
             android:clipToOutline="true"
-            android:scaleType="centerInside"
+            android:scaleType="centerCrop"
             android:src="@drawable/img_album_exp2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
