@@ -93,6 +93,38 @@ class DownloadedMusicFragment: Fragment(), NewMusicDailyAdapter.ItemClickListene
             Music(
                 "Weekend", "태연", R.drawable.img_album_exp6, "가장 가까운 바다\n" +
                         "혼자만의 영화관", "2021.07.06 싱글 댄스팝", 0, 234, false, "music_nextlevel"
+            ),
+            Music(
+                "Next Level", "aespa", R.drawable.img_album_exp3, "I'm on the Next Level Yeah\n" +
+                        "절대적 룰을 지켜", "2021.05.17 싱글 댄스팝", 0, 222, false, "music_nextlevel"
+            ),
+            Music(
+                "작은 것들을 위한 시", "방탄소년단", R.drawable.img_album_exp4, "모든 게 궁금해\n" +
+                        "How's your day", "2019.04.12 미니 알앤비, 힙합", 0, 229, false, "music_nextlevel"
+            ),
+            Music(
+                "BAAM", "모모랜드 (MOMOLAND)", R.drawable.img_album_exp5, "Bae Bae Bae BAAM BAAM\n" +
+                        "Bae Bae Bae BAAM BAAM", "2018.06.26", 0, 208, false, "music_nextlevel"
+            ),
+            Music(
+                "Weekend", "태연", R.drawable.img_album_exp6, "가장 가까운 바다\n" +
+                        "혼자만의 영화관", "2021.07.06 싱글 댄스팝", 0, 234, false, "music_nextlevel"
+            ),
+            Music(
+                "Next Level", "aespa", R.drawable.img_album_exp3, "I'm on the Next Level Yeah\n" +
+                        "절대적 룰을 지켜", "2021.05.17 싱글 댄스팝", 0, 222, false, "music_nextlevel"
+            ),
+            Music(
+                "작은 것들을 위한 시", "방탄소년단", R.drawable.img_album_exp4, "모든 게 궁금해\n" +
+                        "How's your day", "2019.04.12 미니 알앤비, 힙합", 0, 229, false, "music_nextlevel"
+            ),
+            Music(
+                "BAAM", "모모랜드 (MOMOLAND)", R.drawable.img_album_exp5, "Bae Bae Bae BAAM BAAM\n" +
+                        "Bae Bae Bae BAAM BAAM", "2018.06.26", 0, 208, false, "music_nextlevel"
+            ),
+            Music(
+                "Weekend", "태연", R.drawable.img_album_exp6, "가장 가까운 바다\n" +
+                        "혼자만의 영화관", "2021.07.06 싱글 댄스팝", 0, 234, false, "music_nextlevel"
             )
         )
     }

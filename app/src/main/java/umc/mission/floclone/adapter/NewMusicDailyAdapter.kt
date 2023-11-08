@@ -2,6 +2,7 @@ package umc.mission.floclone.adapter
 
 import android.content.Context
 import android.util.Log
+import android.util.SparseBooleanArray
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -26,6 +27,7 @@ class NewMusicDailyAdapter(
         return oldItem == newItem
     }
 }) {
+    private val switchStatus = SparseBooleanArray()
     class NewMusicDailyViewHolder(private val binding: ItemNewMusicDailyBinding) :
         RecyclerView.ViewHolder(binding.root) {
         val playBtn = binding.itemNewMusicDailyPlayBtn
@@ -59,8 +61,7 @@ class NewMusicDailyAdapter(
             }
         }
     }
-
-    class DownloadedMusicViewHolder(private val binding: ItemDownloadedMusicBinding):
+    inner class DownloadedMusicViewHolder(private val binding: ItemDownloadedMusicBinding):
         RecyclerView.ViewHolder(binding.root){
         val moreBtn = binding.itemDownloadedMusicMoreBtn
         fun bind(music: Music){
@@ -68,6 +69,14 @@ class NewMusicDailyAdapter(
                 itemDownloadedMusicImgIv.setImageResource(music.musicImageResId ?: 0)
                 itemDownloadedMusicTitleTv.text = music.title
                 itemDownloadedMusicSingerTv.text = music.singer
+                Switch.isChecked = switchStatus[adapterPosition]
+                Switch.setOnClickListener {
+                    if(!Switch.isChecked)
+                        switchStatus.put(adapterPosition, false)
+                    else
+                        switchStatus.put(adapterPosition, true)
+                    Log.d("switch", "$switchStatus")
+                }
             }
         }
     }

@@ -59,4 +59,12 @@
         app:layout_constraintBottom_toBottomOf="@id/cardView"
         app:layout_constraintEnd_toEndOf="parent"/>
 
+    <Switch
+        android:id="@+id/Switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/cardView"
+        app:layout_constraintEnd_toEndOf="@id/item_downloaded_music_play_btn"
+        app:layout_constraintTop_toTopOf="@id/cardView"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
