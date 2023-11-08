@@ -35,7 +35,6 @@ class HomeFragment : Fragment(), NewMusicDailyAdapter.ItemClickListener {
     private lateinit var homeViewPager1List: MutableList<Int>
     private lateinit var homeViewPager2List: MutableList<Int>
     private lateinit var binding: FragmentHomeBinding
-    private var gson = Gson()
     private val sliderHandler: Handler = Handler()
     private val sliderRunnable = Runnable {
         if (binding.homeBannerViewpager2.currentItem == 3)
@@ -120,8 +119,9 @@ class HomeFragment : Fragment(), NewMusicDailyAdapter.ItemClickListener {
             R.id.home_video_collection_recyclerview -> videoCollectionList
             else -> emptyList()
         }.toMutableList()
-        val newMusicDailyAdapter = NewMusicDailyAdapter(recyclerViewItemList, viewHolderType, this)
+        val newMusicDailyAdapter = NewMusicDailyAdapter(viewHolderType, this)
         recyclerView.adapter = newMusicDailyAdapter
+        newMusicDailyAdapter.submitList(recyclerViewItemList)
     }
 
     private fun initViewPager() {
@@ -242,6 +242,10 @@ class HomeFragment : Fragment(), NewMusicDailyAdapter.ItemClickListener {
                     .commitAllowingStateLoss()
             }
         }
+    }
+
+    override fun onRemove(position: Int) {
+        TODO("Not yet implemented")
     }
 
     override fun onResume() {

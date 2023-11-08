@@ -48,9 +48,12 @@ class AlbumBSideTrackFragment: Fragment() {
         )
         val layoutManager = LinearLayoutManager(context)
         layoutManager.orientation = LinearLayoutManager.VERTICAL
-        val recyclerView = view?.findViewById<RecyclerView>(R.id.album_b_side_track_recyclerview)
-        recyclerView?.layoutManager = layoutManager
-        binding.albumBSideTrackRecyclerview.adapter = NewMusicDailyAdapter(list, B_SIDE_TRACK)
+        val recyclerView = binding.albumBSideTrackRecyclerview
+        recyclerView.layoutManager = layoutManager
+        binding.albumBSideTrackRecyclerview.adapter = NewMusicDailyAdapter(B_SIDE_TRACK).apply {
+            submitList(list)
+        }
+
     }
 
     private fun updateView(){
