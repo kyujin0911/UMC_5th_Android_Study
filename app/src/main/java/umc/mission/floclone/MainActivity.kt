@@ -12,15 +12,20 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import com.google.gson.Gson
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import umc.mission.floclone.data.*
 import umc.mission.floclone.databinding.ActivityMainBinding
 import umc.mission.floclone.locker.LockerFragment
+import java.text.SimpleDateFormat
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var selectedMusic: Music
     private var gson = Gson()
-    private lateinit var sharedPreferences: SharedPreferences
+    private var mediaPlayer: MediaPlayer? = null
     private val playerMusic = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -29,7 +34,9 @@ class MainActivity : AppCompatActivity() {
         if (musicTitle != null && musicSinger != null && result.resultCode == RESULT_OK) {
             binding.tvMainPlayingMusicTitle.text = musicTitle
             binding.tvMainPlayingMusicSinger.text = musicSinger
+            mediaPlayer?.seekTo(result.data?.getIntExtra(CURRENT_POSITION, 0)!!)
             Toast.makeText(this, "앨범 제목: $musicTitle", Toast.LENGTH_SHORT).show()
+            setPlayerStatus(result.data?.getBooleanExtra(IS_PLAYING, false)!!)
         }
     }
 
@@ -41,8 +48,6 @@ class MainActivity : AppCompatActivity() {
         initBottomNavigation()
         initSelectedMusic()
         updateMusicPlayer()
-        sharedPreferences = getSharedPreferences(MUSIC, MODE_PRIVATE)
-        //registerReceiver(receiver, IntentFilter(SERVICE_TO_MAIN_INTENT_FILTER))
 
         binding.activityMainPlayer.setOnClickListener {
             val intent = Intent(this, SongActivity::class.java)
@@ -50,9 +55,9 @@ class MainActivity : AppCompatActivity() {
             intent.putExtra(MUSIC_SINGER, selectedMusic.singer)
             intent.putExtra(LYRICS, selectedMusic.lyrics)
             intent.putExtra(MUSIC_IMG_RES_ID, selectedMusic.musicImageResId)
-            intent.putExtra(SECOND, selectedMusic.second)
-            intent.putExtra(PLAY_TIME, selectedMusic.playTime)
-            intent.putExtra(IS_PLAYING, true)
+            intent.putExtra(SECOND, mediaPlayer?.currentPosition)
+            intent.putExtra(PLAY_TIME, mediaPlayer?.duration)
+            intent.putExtra(IS_PLAYING, mediaPlayer?.isPlaying)
             intent.putExtra(MUSIC_FILE_NAME, selectedMusic.musicFileName)
             playerMusic.launch(intent)
         }
@@ -123,7 +128,11 @@ class MainActivity : AppCompatActivity() {
 
             binding.tvMainPlayingMusicTitle.text = selectedMusic.title
             binding.tvMainPlayingMusicSinger.text = selectedMusic.singer
-            //binding.activityMainMusicSeekbar.max = selectedMusic.playTime
+
+            val musicFile = resources.getIdentifier(selectedMusic.musicFileName, "raw", this.packageName)
+            mediaPlayer = MediaPlayer.create(this, musicFile)
+            binding.activityMainMusicSeekbar.max = mediaPlayer?.duration!!
+
             setPlayerStatus(selectedMusic.isPlaying)
         }
     }
@@ -133,10 +142,15 @@ class MainActivity : AppCompatActivity() {
         if (isPlaying) {
             binding.activityMainBtnPlay.visibility = View.GONE
             binding.activityMainBtnPause.visibility = View.VISIBLE
+            mediaPlayer?.start()
         } else {
             binding.activityMainBtnPlay.visibility = View.VISIBLE
             binding.activityMainBtnPause.visibility = View.GONE
+            if (mediaPlayer?.isPlaying == true) {
+                mediaPlayer?.pause()
+            }
         }
+        updateSeekBar()
     }
 
     override fun onStart() {
@@ -151,6 +165,27 @@ class MainActivity : AppCompatActivity() {
         } else {
             gson.fromJson(musicJson, Music::class.java)
         }
-        binding.activityMainMusicSeekbar.progress = (selectedMusic.second*100000)/selectedMusic.playTime
+        binding.activityMainMusicSeekbar.progress = selectedMusic.second
+        binding.tvMainPlayingMusicTitle.text = selectedMusic.title
+        binding.tvMainPlayingMusicSinger.text = selectedMusic.singer
+    }
+
+    private fun updateSeekBar() {
+        CoroutineScope(Dispatchers.Main).launch {
+            while(mediaPlayer?.isPlaying!!) {
+                delay(50)
+                binding.activityMainMusicSeekbar.progress = mediaPlayer?.currentPosition!!
+            }
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        setPlayerStatus(false)
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        mediaPlayer?.release()
+        mediaPlayer = null
     }
 }
