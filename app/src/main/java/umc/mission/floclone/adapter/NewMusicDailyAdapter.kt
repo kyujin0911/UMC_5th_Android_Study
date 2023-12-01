@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
-import umc.mission.floclone.data.Music
+import umc.mission.floclone.data.Song
 import umc.mission.floclone.databinding.ItemBSideTrackBinding
 import umc.mission.floclone.databinding.ItemDownloadedMusicBinding
 import umc.mission.floclone.databinding.ItemHomeVideoCollectionBinding
@@ -18,12 +18,12 @@ import umc.mission.floclone.databinding.ItemNewMusicDailyBinding
 class NewMusicDailyAdapter(
     private val viewHolderType: Int,
     private val itemClickListener: ItemClickListener? = null
-) : ListAdapter<Music, RecyclerView.ViewHolder>(object : DiffUtil.ItemCallback<Music>() {
-    override fun areItemsTheSame(oldItem: Music, newItem: Music): Boolean {
+) : ListAdapter<Song, RecyclerView.ViewHolder>(object : DiffUtil.ItemCallback<Song>() {
+    override fun areItemsTheSame(oldItem: Song, newItem: Song): Boolean {
         return oldItem === newItem
     }
 
-    override fun areContentsTheSame(oldItem: Music, newItem: Music): Boolean {
+    override fun areContentsTheSame(oldItem: Song, newItem: Song): Boolean {
         return oldItem == newItem
     }
 }) {
@@ -32,43 +32,43 @@ class NewMusicDailyAdapter(
         RecyclerView.ViewHolder(binding.root) {
         val playBtn = binding.itemNewMusicDailyPlayBtn
         val musicImg = binding.ivRecyclerviewNewMusicDailyImg
-        fun bind(music: Music) {
+        fun bind(song: Song) {
             binding.apply {
-                tvRecyclerviewNewMusicDailyTitle.text = music.title
-                tvRecyclerviewNewMusicDailySinger.text = music.singer
-                ivRecyclerviewNewMusicDailyImg.setImageResource(music.musicImageResId ?: 0)
+                tvRecyclerviewNewMusicDailyTitle.text = song.title
+                tvRecyclerviewNewMusicDailySinger.text = song.singer
+                ivRecyclerviewNewMusicDailyImg.setImageResource(song.coverImg ?: 0)
             }
         }
     }
 
     class VideoCollectionViewHolder(private val binding: ItemHomeVideoCollectionBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(music: Music) {
+        fun bind(song: Song) {
             binding.apply {
-                tvRecyclerviewVideoCollectionTitle.text = music.title
-                tvRecyclerviewVideoCollectionSinger.text = music.singer
-                ivRecyclerviewVideoCollectionImg.setImageResource(music.musicImageResId ?: 0)
+                tvRecyclerviewVideoCollectionTitle.text = song.title
+                tvRecyclerviewVideoCollectionSinger.text = song.singer
+                ivRecyclerviewVideoCollectionImg.setImageResource(song.coverImg ?: 0)
             }
         }
     }
 
     class BSideTrackViewHolder(private val binding: ItemBSideTrackBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(music: Music) {
+        fun bind(song: Song) {
             binding.apply {
-                itemTrackMusicTitleTv.text = music.title
-                itemTrackSingerTv.text = music.singer
+                itemTrackMusicTitleTv.text = song.title
+                itemTrackSingerTv.text = song.singer
             }
         }
     }
     inner class DownloadedMusicViewHolder(private val binding: ItemDownloadedMusicBinding):
         RecyclerView.ViewHolder(binding.root){
         val moreBtn = binding.itemDownloadedMusicMoreBtn
-        fun bind(music: Music){
+        fun bind(song: Song){
             binding.apply {
-                itemDownloadedMusicImgIv.setImageResource(music.musicImageResId ?: 0)
-                itemDownloadedMusicTitleTv.text = music.title
-                itemDownloadedMusicSingerTv.text = music.singer
+                itemDownloadedMusicImgIv.setImageResource(song.coverImg ?: 0)
+                itemDownloadedMusicTitleTv.text = song.title
+                itemDownloadedMusicSingerTv.text = song.singer
                 Switch.isChecked = switchStatus[adapterPosition]
                 Switch.setOnClickListener {
                     if(!Switch.isChecked)
@@ -133,6 +133,7 @@ class NewMusicDailyAdapter(
                     bind(newMusicDaily)
                     moreBtn.setOnClickListener {
                         itemClickListener?.onRemove(adapterPosition)
+                        notifyItemRangeChanged(0, currentList.size)
                     }
                 }
             }
@@ -154,7 +155,7 @@ class NewMusicDailyAdapter(
     }
 
     interface ItemClickListener {
-        fun onClick(music: Music, viewType: Int)
+        fun onClick(song: Song, viewType: Int)
         fun onRemove(position: Int)
     }
 }

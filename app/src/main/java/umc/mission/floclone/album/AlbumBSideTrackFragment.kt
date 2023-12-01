@@ -6,20 +6,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import umc.mission.floclone.data.Music
 import umc.mission.floclone.R
 import umc.mission.floclone.adapter.NewMusicDailyAdapter
 import umc.mission.floclone.adapter.NewMusicDailyAdapter.Companion.B_SIDE_TRACK
-import umc.mission.floclone.data.MUSIC_SINGER
-import umc.mission.floclone.data.MUSIC_TITLE
+import umc.mission.floclone.data.*
 import umc.mission.floclone.databinding.FragmentAlbumBSideTrackBinding
 
 class AlbumBSideTrackFragment: Fragment() {
     private lateinit var binding: FragmentAlbumBSideTrackBinding
-    private var musicTitle: String? = null
-    private var musicSinger: String? = null
+    private lateinit var album: Album
     private var toggle = false
+    private val songs = arrayListOf<Song>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,27 +28,20 @@ class AlbumBSideTrackFragment: Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        musicTitle = arguments?.getString(MUSIC_TITLE)
-        musicSinger = arguments?.getString(MUSIC_SINGER)
+        val albumIdx = arguments?.getInt(SONG_ALBUM_INDEX, 0)
+        val songDB = SongDatabase.getInstance(requireContext())!!
+        songs.addAll(songDB.songDao().getSongsInAlbum(albumIdx!!))
         initRecyclerView()
         updateView()
     }
 
     private fun initRecyclerView(){
-        val list = mutableListOf(
-            Music(musicTitle, musicSinger),
-            Music(musicTitle, musicSinger),
-            Music(musicTitle, musicSinger),
-            Music(musicTitle, musicSinger),
-            Music(musicTitle, musicSinger),
-            Music(musicTitle, musicSinger)
-        )
         val layoutManager = LinearLayoutManager(context)
         layoutManager.orientation = LinearLayoutManager.VERTICAL
         val recyclerView = binding.albumBSideTrackRecyclerview
         recyclerView.layoutManager = layoutManager
         binding.albumBSideTrackRecyclerview.adapter = NewMusicDailyAdapter(B_SIDE_TRACK).apply {
-            submitList(list)
+            submitList(songs)
         }
 
     }

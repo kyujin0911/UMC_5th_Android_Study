@@ -6,13 +6,14 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import umc.mission.floclone.*
 import umc.mission.floclone.album.AlbumBSideTrackFragment
 import umc.mission.floclone.album.DetailFragment
-import umc.mission.floclone.locker.DownloadedMusicFragment
+import umc.mission.floclone.locker.SavedSongFragment
 import umc.mission.floclone.locker.MusicFileFragment
+import umc.mission.floclone.locker.SavedAlbumFragment
 
 class ViewpagerFragmentAdapter(fragment: Fragment, private val caller: Int, private val bundle: Bundle? = null): FragmentStateAdapter(fragment) {
     private var fragmentList:MutableList<Fragment> = when(caller){
         ALBUM -> mutableListOf(AlbumBSideTrackFragment(), DetailFragment(), VideoFragment())
-        LOCKER -> mutableListOf(DownloadedMusicFragment(), MusicFileFragment())
+        LOCKER -> mutableListOf(SavedSongFragment(), MusicFileFragment(), SavedAlbumFragment())
         else -> mutableListOf()
     }
 

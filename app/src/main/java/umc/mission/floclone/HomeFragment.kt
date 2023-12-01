@@ -1,19 +1,15 @@
 package umc.mission.floclone
 
-import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
-import com.google.gson.Gson
 import kotlinx.coroutines.Runnable
 import umc.mission.floclone.adapter.NewMusicDailyAdapter.Companion.NEW_MUSIC_DAILY
 import umc.mission.floclone.adapter.NewMusicDailyAdapter.Companion.VIDEO_COLLECTION
@@ -29,9 +25,9 @@ import umc.mission.floclone.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment(), NewMusicDailyAdapter.ItemClickListener {
     private lateinit var homeViewPagerAdapter: HomeViewPagerAdapter
-    private lateinit var musicList: MutableList<Music>
-    private lateinit var podcastList: MutableList<Music>
-    private lateinit var videoCollectionList: MutableList<Music>
+    private lateinit var songList: MutableList<Song>
+    private lateinit var podcastList: MutableList<Song>
+    private lateinit var videoCollectionList: MutableList<Song>
     private lateinit var homeViewPager1List: MutableList<Int>
     private lateinit var homeViewPager2List: MutableList<Int>
     private lateinit var binding: FragmentHomeBinding
@@ -66,35 +62,28 @@ class HomeFragment : Fragment(), NewMusicDailyAdapter.ItemClickListener {
     }
 
     private fun makeDummyData() {
-        musicList = mutableListOf(
-            Music(
-                "Next Level", "aespa", R.drawable.img_album_exp3, "I'm on the Next Level Yeah\n" +
-                        "절대적 룰을 지켜", "2021.05.17 싱글 댄스팝", 0, 222, false, "music_nextlevel"
-            ),
-            Music(
-                "작은 것들을 위한 시", "방탄소년단", R.drawable.img_album_exp4, "모든 게 궁금해\n" +
-                        "How's your day", "2019.04.12 미니 알앤비, 힙합", 0, 229, false, "music_nextlevel"
-            ),
-            Music(
-                "BAAM", "모모랜드 (MOMOLAND)", R.drawable.img_album_exp5, "Bae Bae Bae BAAM BAAM\n" +
-                        "Bae Bae Bae BAAM BAAM", "2018.06.26", 0, 208, false, "music_nextlevel"
-            ),
-            Music(
-                "Weekend", "태연", R.drawable.img_album_exp6, "가장 가까운 바다\n" +
-                        "혼자만의 영화관", "2021.07.06 싱글 댄스팝", 0, 234, false, "music_nextlevel"
-            )
+        songList = mutableListOf(
+            Song("Next Level", "aespa", 0, 222, false, "music_nextlevel",
+                R.drawable.img_album_exp3, false,"I'm on the Next Level Yeah\n절대적 룰을 지켜", 1),
+            Song("작은 것들을 위한 시", "방탄소년단", 0, 229, false, "music_lilac",
+                R.drawable.img_album_exp4, false, "모든 게 궁금해\nHow's your day", 2),
+            Song("BAAM", "모모랜드 (MOMOLAND)", 0, 208, false, "music_nextlevel",
+                R.drawable.img_album_exp5, false, "Bae Bae Bae BAAM BAAM\nBae Bae Bae BAAM BAAM", 3),
+            Song("Weekend", "태연", 0, 234, false, "music_nextlevel",
+                R.drawable.img_album_exp6, false, "가장 가까운 바다\n혼자만의 영화관", 4)
         )
         podcastList = mutableListOf(
-            Music("제목", "가수", R.drawable.img_potcast_exp),
-            Music("제목", "가수", R.drawable.img_potcast_exp),
-            Music("제목", "가수", R.drawable.img_potcast_exp),
-            Music("제목", "가수", R.drawable.img_potcast_exp)
+            Song("제목", "가수", 0, 0, false, "", R.drawable.img_potcast_exp),
+            Song("제목", "가수", 0, 0, false, "", R.drawable.img_potcast_exp),
+            Song("제목", "가수", 0, 0, false, "", R.drawable.img_potcast_exp),
+            Song("제목", "가수", 0, 0, false, "", R.drawable.img_potcast_exp)
+
         )
         videoCollectionList = mutableListOf(
-            Music("제목", "가수", R.drawable.img_video_exp),
-            Music("제목", "가수", R.drawable.img_video_exp),
-            Music("제목", "가수", R.drawable.img_video_exp),
-            Music("제목", "가수", R.drawable.img_video_exp)
+            Song("제목", "가수",0, 0, false, "", R.drawable.img_video_exp),
+            Song("제목", "가수",0, 0, false, "", R.drawable.img_video_exp),
+            Song("제목", "가수",0, 0, false, "", R.drawable.img_video_exp),
+            Song("제목", "가수",0, 0, false, "", R.drawable.img_video_exp)
         )
         homeViewPager1List = mutableListOf(
             R.drawable.img_home_viewpager_exp,
@@ -114,7 +103,7 @@ class HomeFragment : Fragment(), NewMusicDailyAdapter.ItemClickListener {
         val recyclerView = view.findViewById<RecyclerView>(recyclerViewId)
         recyclerView.layoutManager = layoutManager
         val recyclerViewItemList = when (recyclerViewId) {
-            R.id.home_new_music_daily_recyclerview -> musicList
+            R.id.home_new_music_daily_recyclerview -> songList
             R.id.home_podcast_recyclerview -> podcastList
             R.id.home_video_collection_recyclerview -> videoCollectionList
             else -> emptyList()
@@ -214,27 +203,33 @@ class HomeFragment : Fragment(), NewMusicDailyAdapter.ItemClickListener {
         }
     }
 
-    override fun onClick(music: Music, viewType: Int) {
+    override fun onClick(song: Song, viewType: Int) {
         val bundle = Bundle()
         when (viewType) {
             PLAY_BTN -> {
-                bundle.apply {
-                    putString(MUSIC_TITLE, music.title)
-                    putString(MUSIC_SINGER, music.singer)
-                    putInt(MUSIC_IMG_RES_ID, music.musicImageResId ?: 0)
-                    putString(LYRICS, music.lyrics)
-                    putInt(SECOND, music.second)
-                    putInt(PLAY_TIME, music.playTime)
-                    putString(MUSIC_FILE_NAME, music.musicFileName)
-                }
+                /*bundle.apply {
+                    putString(MUSIC_TITLE, song.title)
+                    putString(MUSIC_SINGER, song.singer)
+                    putInt(MUSIC_IMG_RES_ID, song.coverImg ?: 0)
+                    putString(LYRICS, song.lyrics)
+                    putInt(SECOND, song.second)
+                    putInt(PLAY_TIME, song.playTime)
+                    putString(MUSIC, song.music)
+                    putBoolean(IS_PLAYING, true)
+                    putBoolean(IS_LIKE, false)
+                }*/
+                bundle.putInt(SONG_ALBUM_INDEX, song.albumIdx)
                 parentFragmentManager.setFragmentResult(MUSIC, bundle)
             }
             else -> {
                 var tempFragment = AlbumFragment()
-                bundle.putString(MUSIC_TITLE, music.title)
-                bundle.putString(MUSIC_SINGER, music.singer)
-                bundle.putInt(MUSIC_IMG_RES_ID, music.musicImageResId ?: 0)
-                bundle.putString(ALBUM_INFO, music.albumInfo)
+                //bundle.putString(MUSIC_TITLE, song.title)
+                //bundle.putString(MUSIC_SINGER, song.singer)
+                //bundle.putInt(MUSIC_IMG_RES_ID, song.coverImg ?: 0)
+                //bundle.putString(ALBUM_INFO, song.albumInfo)
+                val songDB = SongDatabase.getInstance(requireContext())!!
+                val album = songDB.albumDao().getAlbum(song.albumIdx)
+                bundle.putInt(SONG_ALBUM_INDEX, album.id)
                 tempFragment.arguments = bundle
                 parentFragmentManager.beginTransaction()
                     .replace(R.id.activity_main_fragment_container, tempFragment)

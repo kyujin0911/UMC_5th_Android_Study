@@ -8,7 +8,8 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="flo">#F44336</color>
-    <color name="category_selected">#2E28D2</color>
+    <color name="category_selected">#4040FE</color>
     <color name="category_unselected">#7C7C7C</color>
+    <color name="category_unselected_btn">#FFDFDFDF</color>
     <color name="transparent">#00ff0000</color>
 </resources>

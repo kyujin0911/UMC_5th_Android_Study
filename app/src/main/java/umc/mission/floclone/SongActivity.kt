@@ -2,56 +2,79 @@ package umc.mission.floclone
 
 import android.app.Activity
 import android.content.Intent
+import android.content.res.Resources
 import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
+import android.widget.Toast
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.snackbar.Snackbar.SnackbarLayout
 import com.google.gson.Gson
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import umc.mission.floclone.data.*
 import umc.mission.floclone.databinding.ActivitySongBinding
+import umc.mission.floclone.databinding.ToastLikeBinding
 import java.text.SimpleDateFormat
+import java.util.function.BinaryOperator
+import kotlin.math.pow
+import kotlin.math.roundToInt
 
 class SongActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySongBinding
-    private lateinit var music: Music
+    private lateinit var song: Song
+    private lateinit var songDB: SongDatabase
     private var mediaPlayer: MediaPlayer? = null
     private var repeatBtnState = false
-    private var gson = Gson()
     private var timeFormat = SimpleDateFormat("mm:ss")
+    private val songs = arrayListOf<Song>()
+    private var newPos = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySongBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        initMusic()
-        initView()
-        startMusic()
-        pauseMusic()
-        returnMainActivity()
+        songDB = SongDatabase.getInstance(this)!!
+        initSong()
+        initClickListener()
         updateView()
     }
 
-    private fun initMusic() {
-        music = Music(
-            intent.getStringExtra(MUSIC_TITLE), intent.getStringExtra(MUSIC_SINGER),
-            intent.getIntExtra(MUSIC_IMG_RES_ID, 0), intent.getStringExtra(LYRICS), null,
-            intent.getIntExtra(SECOND, 0), intent.getIntExtra(PLAY_TIME, 0), intent.getBooleanExtra(
-                IS_PLAYING, true
-            ), intent.getStringExtra(MUSIC_FILE_NAME)
-        )
+    private fun initSong() {
+        val sharedPreferences = getSharedPreferences(SONG, MODE_PRIVATE)
+        val songId = sharedPreferences.getInt(SONG_ID, 0)
+        song = songDB.songDao().getSong(songId)
+        Log.d("songSong", song.toString())
+
+        initPlayList()
+        newPos = getPlayingSongPosition(songId)
+        songs[newPos].second = intent.getIntExtra(SECOND, 0)
+        songs[newPos].isPlaying = intent.getBooleanExtra(IS_PLAYING, false)
+        setPlayer(songs[newPos])
     }
 
-    private fun initView() {
-        binding.activitySongMusicTitleTv.text = music.title
-        binding.activitySongSingerTv.text = music.singer
-        binding.activitySongMusicLyricsTv.text = music.lyrics
-        binding.activitySongAlbumImgIv.setImageResource(intent.getIntExtra(MUSIC_IMG_RES_ID, 0))
+    private fun initPlayList() {
+        songs.addAll(songDB.songDao().getSongsInAlbum(song.albumIdx))
+        Log.d("songs", songs.toString())
+    }
 
-        val musicFile = resources.getIdentifier(music.musicFileName, "raw", this.packageName)
+    private fun getPlayingSongPosition(songId: Int): Int {
+        for (i in 0 until songs.size) {
+            if (songs[i].id == songId)
+                return i
+        }
+        return 0
+    }
+
+    private fun setPlayer(song: Song) {
+        binding.activitySongMusicTitleTv.text = song.title
+        binding.activitySongSingerTv.text = song.singer
+        binding.activitySongMusicLyricsTv.text = song.lyrics
+        binding.activitySongAlbumImgIv.setImageResource(song.coverImg ?: 0)
+        binding.activitySongLikeBtn.setImageResource(if (song.isLike) R.drawable.ic_my_like_on else R.drawable.ic_my_like_off)
+        val musicFile = resources.getIdentifier(song.music, "raw", this.packageName)
         mediaPlayer = MediaPlayer.create(this, musicFile).apply {
             isLooping = repeatBtnState
         }
@@ -59,31 +82,17 @@ class SongActivity : AppCompatActivity() {
         binding.activitySongMusicPlayingTimeEndTv.text =
             timeFormat.format(mediaPlayer?.duration)
         binding.activitySongMusicPlayingTimeStartTv.text =
-            timeFormat.format(music.second)
+            timeFormat.format(song.second)
 
         binding.activitySongMusicSeekbar.max = mediaPlayer?.duration!!
-        binding.activitySongMusicSeekbar.progress = music.second
-        mediaPlayer?.seekTo(music.second)
+        binding.activitySongMusicSeekbar.progress = song.second
+        mediaPlayer?.seekTo(song.second)
         Log.d("duration", "${mediaPlayer?.duration}")
-        setPlayerStatus(music.isPlaying)
-    }
-
-    private fun returnMainActivity() {
-        binding.activitySongDownBtn.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java).apply {
-                putExtra(MUSIC_TITLE, music.title)
-                putExtra(MUSIC_SINGER, music.singer)
-                putExtra(CURRENT_POSITION, mediaPlayer?.currentPosition)
-                putExtra(IS_PLAYING, mediaPlayer?.isPlaying)
-            }
-            setResult(Activity.RESULT_OK, intent)
-            finish()
-        }
+        setPlayerStatus(song.isPlaying)
     }
 
     private fun updateView() {
         var randomBtnState = false
-        var likeBtnState = false
         binding.activitySongPlayerRepeatBtn.setOnClickListener {
             repeatBtnState = !repeatBtnState
             binding.activitySongPlayerRepeatBtn.setImageResource(
@@ -98,32 +107,84 @@ class SongActivity : AppCompatActivity() {
         }
 
         binding.activitySongLikeBtn.setOnClickListener {
-            likeBtnState = !likeBtnState
-            binding.activitySongLikeBtn.setImageResource(if (likeBtnState) R.drawable.ic_my_like_on else R.drawable.ic_my_like_off)
+            setLike(songs[newPos].isLike)
+            val toastLikeBinding = ToastLikeBinding.inflate(layoutInflater)
+            toastLikeBinding.run {
+                toastLikeBinding.toastTv.text = if (songs[newPos].isLike)
+                    "                           좋아요 한 곡이 담겼습니다.                           "
+                else "                           좋아요 한 곡이 취소되었습니다.                           "
+                val toast = Toast(this@SongActivity)
+                toast.view = toastLikeBinding.root
+                toast.duration = Toast.LENGTH_SHORT
+                toast.setGravity(Gravity.BOTTOM, 0, binding.activitySongPlayerPlayBtn.height.times(2)+100.toPx())//binding.activitySongPlayerPlayBtn.layoutParams.height+50.toPx())
+                toast.show()
+            }
         }
     }
 
-    private fun startMusic() {
+    private fun Int.toPx(): Int = (this/Resources.getSystem().displayMetrics.density).toInt()
+
+    private fun setLike(isLike: Boolean){
+        songs[newPos].isLike = !isLike
+        binding.activitySongLikeBtn.setImageResource(if (songs[newPos].isLike) R.drawable.ic_my_like_on else R.drawable.ic_my_like_off)
+        songDB.songDao().updateIsLikeById(songs[newPos].isLike, songs[newPos].id)
+    }
+
+
+    private fun initClickListener() {
         binding.activitySongPlayerPlayBtn.setOnClickListener {
             setPlayerStatus(true)
         }
-    }
 
-    private fun pauseMusic() {
         binding.activitySongPlayerPauseBtn.setOnClickListener {
             setPlayerStatus(false)
         }
+
+        binding.activitySongDownBtn.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java).apply {
+                putExtra(MUSIC_TITLE, songs[newPos].title)
+                putExtra(MUSIC_SINGER, songs[newPos].singer)
+                putExtra(CURRENT_POSITION, mediaPlayer?.currentPosition)
+                putExtra(IS_PLAYING, mediaPlayer?.isPlaying)
+            }
+            setResult(Activity.RESULT_OK, intent)
+            finish()
+        }
+
+        binding.activitySongPlayerNextBtn.setOnClickListener {
+            moveSong(+1)
+        }
+
+        binding.activitySongPlayerPreviousBtn.setOnClickListener {
+            moveSong(-1)
+        }
+    }
+
+    private fun moveSong(direct: Int){
+        if(newPos + direct < 0){
+            Toast.makeText(this, "first song", Toast.LENGTH_SHORT).show()
+            return
+        }
+        if(newPos + direct >= songs.size){
+            Toast.makeText(this, "last song", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        newPos += direct
+        mediaPlayer?.release()
+        mediaPlayer = null
+        songs[newPos].isPlaying = true
+        setPlayer(songs[newPos])
     }
 
     override fun onPause() {
         super.onPause()
+        songs[newPos].second = mediaPlayer?.currentPosition!!
         setPlayerStatus(false)
-        music.second = mediaPlayer?.currentPosition!!
-            //((binding.activitySongMusicSeekbar.progress * music.playTime) / 100) / 1000
-        val sharedPreferences = getSharedPreferences(MUSIC, MODE_PRIVATE)
+        val sharedPreferences = getSharedPreferences(SONG, MODE_PRIVATE)
         val editor = sharedPreferences.edit()
-        val musicJson = gson.toJson(music)
-        editor.putString(MUSIC_FILE_NAME, musicJson).apply()
+        editor.putInt(SONG_ID, songs[newPos].id).apply()
+        Log.d("pasue", songs[newPos].toString())
     }
 
     override fun onDestroy() {
@@ -133,7 +194,7 @@ class SongActivity : AppCompatActivity() {
     }
 
     private fun setPlayerStatus(isPlaying: Boolean) {
-        music.isPlaying = isPlaying
+        songs[newPos].isPlaying = isPlaying
         if (isPlaying) {
             binding.activitySongPlayerPlayBtn.visibility = View.GONE
             binding.activitySongPlayerPauseBtn.visibility = View.VISIBLE
@@ -150,7 +211,7 @@ class SongActivity : AppCompatActivity() {
 
     private fun updateSeekBar() {
         CoroutineScope(Dispatchers.Main).launch {
-            while(mediaPlayer?.isPlaying!!) {
+            while (mediaPlayer?.isPlaying!!) {
                 delay(50)
                 binding.activitySongMusicSeekbar.progress = mediaPlayer?.currentPosition!!
                 binding.activitySongMusicPlayingTimeStartTv.text =
