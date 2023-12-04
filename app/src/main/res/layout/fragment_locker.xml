@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:paddingTop="20dp"
     android:paddingStart="20dp"
-    tools:context=".locker.LockerFragment">
+    tools:context=".ui.main.locker.LockerFragment">
 
     <TextView
         android:id="@+id/fragment_locker_title_tv"

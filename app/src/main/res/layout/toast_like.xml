@@ -11,8 +11,8 @@
         android:gravity="center"
         android:padding="20dp"
         android:paddingHorizontal="40dp"
+        android:textSize="12sp"
         android:text="좋아요 한 곡에 담겼습니다."
-        android:maxLines="1"
         android:textColor="@color/white"
         android:background="@drawable/bg_toast_like"/>
 

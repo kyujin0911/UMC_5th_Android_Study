@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:paddingHorizontal="20dp"
     android:paddingVertical="20dp"
-    tools:context=".SongActivity">
+    tools:context=".ui.song.SongActivity">
 
     <ImageView
         android:id="@+id/activity_song_player_setting_btn"
